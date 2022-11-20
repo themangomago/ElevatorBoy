@@ -1,0 +1,61 @@
+[gd_scene load_steps=7 format=3 uid="uid://dn7db1cymfgai"]
+
+[ext_resource type="Script" path="res://src/game_instance.gd" id="1_snmib"]
+[ext_resource type="Texture2D" uid="uid://bk4h2c68mqlva" path="res://assets/sky_bg.png" id="2_12eqi"]
+[ext_resource type="PackedScene" uid="uid://bmnlf37ny4d6g" path="res://src/floor.tscn" id="3_tb5ky"]
+[ext_resource type="Texture2D" uid="uid://do3or8gbcvgja" path="res://assets/elevator_bg.png" id="3_x70xx"]
+[ext_resource type="Script" path="res://src/elevator.gd" id="7_1psgl"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dt8fs"]
+size = Vector2(16, 16)
+
+[node name="GameInstance" type="Node2D"]
+texture_filter = 1
+scale = Vector2(2, 2)
+script = ExtResource("1_snmib")
+
+[node name="SkyBg" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0, -1344)
+texture = ExtResource("2_12eqi")
+centered = false
+
+[node name="Floor" parent="." instance=ExtResource("3_tb5ky")]
+
+[node name="Floor2" parent="." instance=ExtResource("3_tb5ky")]
+position = Vector2(0, -96)
+floor = 0
+
+[node name="Floor3" parent="." instance=ExtResource("3_tb5ky")]
+position = Vector2(0, -192)
+floor = 1
+
+[node name="Floor4" parent="." instance=ExtResource("3_tb5ky")]
+position = Vector2(0, -288)
+floor = 2
+
+[node name="Elevator" type="Node2D" parent="."]
+script = ExtResource("7_1psgl")
+
+[node name="Sprite2D" type="Sprite2D" parent="Elevator"]
+position = Vector2(16, -16)
+texture = ExtResource("3_x70xx")
+centered = false
+
+[node name="Camera2D" type="Camera2D" parent="Elevator"]
+position = Vector2(0, -128)
+anchor_mode = 0
+current = true
+
+[node name="Label" type="Label" parent="Elevator"]
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="Area2D" type="Area2D" parent="Elevator"]
+position = Vector2(64, 40)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Elevator/Area2D"]
+shape = SubResource("RectangleShape2D_dt8fs")
+
+[connection signal="area_entered" from="Elevator/Area2D" to="Elevator" method="_on_area_2d_area_entered"]
+[connection signal="area_exited" from="Elevator/Area2D" to="Elevator" method="_on_area_2d_area_exited"]
