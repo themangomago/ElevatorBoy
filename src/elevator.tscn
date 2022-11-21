@@ -1,0 +1,69 @@
+[gd_scene load_steps=7 format=3 uid="uid://mdyew578gv7t"]
+
+[ext_resource type="Script" path="res://src/elevator.gd" id="1_1275r"]
+[ext_resource type="Texture2D" uid="uid://do3or8gbcvgja" path="res://assets/elevator_bg.png" id="2_gbmar"]
+[ext_resource type="Texture2D" uid="uid://cs5xiyxuad4af" path="res://assets/elevator_wheel.png" id="3_lw4ng"]
+[ext_resource type="Texture2D" uid="uid://c6pc7rpleakr6" path="res://assets/elevator_fg.png" id="4_igpcx"]
+[ext_resource type="FontFile" uid="uid://by7ts3uwu1loi" path="res://assets/Rockboxcond12.ttf" id="5_xxdvr"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dt8fs"]
+size = Vector2(16, 16)
+
+[node name="Elevator" type="Node2D"]
+script = ExtResource("1_1275r")
+
+[node name="Sprites" type="Node2D" parent="."]
+position = Vector2(8, -32)
+
+[node name="bg" type="Sprite2D" parent="Sprites"]
+texture = ExtResource("2_gbmar")
+centered = false
+
+[node name="wheel" type="Sprite2D" parent="Sprites"]
+position = Vector2(56, 22)
+z_index = 4
+texture = ExtResource("3_lw4ng")
+
+[node name="fg" type="Sprite2D" parent="Sprites"]
+z_index = 4
+texture = ExtResource("4_igpcx")
+centered = false
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(0, -128)
+anchor_mode = 0
+current = true
+
+[node name="Label" type="Label" parent="."]
+offset_left = 28.0
+offset_top = 8.0
+offset_right = 68.0
+offset_bottom = 31.0
+scale = Vector2(0.5, 0.5)
+theme_override_fonts/font = ExtResource("5_xxdvr")
+theme_override_font_sizes/font_size = 16
+
+[node name="Places" type="Node2D" parent="."]
+
+[node name="p0" type="Marker2D" parent="Places"]
+position = Vector2(68, 80)
+
+[node name="p1" type="Marker2D" parent="Places"]
+position = Vector2(52, 80)
+
+[node name="p2" type="Marker2D" parent="Places"]
+position = Vector2(36, 80)
+
+[node name="Area2D" type="Area2D" parent="."]
+position = Vector2(64, 40)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_dt8fs")
+
+[node name="EntryPos" type="Marker2D" parent="."]
+position = Vector2(104, 80)
+
+[node name="People" type="Node2D" parent="."]
+
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
+[connection signal="area_exited" from="Area2D" to="." method="_on_area_2d_area_exited"]

@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://bmnlf37ny4d6g"]
+[gd_scene load_steps=12 format=3 uid="uid://bmnlf37ny4d6g"]
 
 [ext_resource type="Script" path="res://src/floor.gd" id="1_nn875"]
 [ext_resource type="Texture2D" uid="uid://dmx2eek3c8cub" path="res://assets/shaft_bg.png" id="1_y3213"]
 [ext_resource type="Texture2D" uid="uid://bbr2772lc675d" path="res://assets/shaft_front.png" id="2_87q23"]
 [ext_resource type="Texture2D" uid="uid://bjf2ovcdaxckg" path="res://assets/door.png" id="3_fa8ik"]
 [ext_resource type="Texture2D" uid="uid://crjqfbloerwrn" path="res://assets/floor_dummy.png" id="3_rbrtk"]
+[ext_resource type="FontFile" uid="uid://by7ts3uwu1loi" path="res://assets/Rockboxcond12.ttf" id="6_ylker"]
 
 [sub_resource type="Animation" id="Animation_24d7k"]
 length = 0.001
@@ -67,25 +68,27 @@ size = Vector2(16, 16)
 texture_filter = 1
 script = ExtResource("1_nn875")
 
-[node name="Elevator" type="Node2D" parent="."]
+[node name="ElevatorShaft" type="Node2D" parent="."]
 position = Vector2(8, 0)
 
-[node name="Bg" type="Sprite2D" parent="Elevator"]
+[node name="Bg" type="Sprite2D" parent="ElevatorShaft"]
 texture = ExtResource("1_y3213")
 centered = false
 
-[node name="Door" type="Sprite2D" parent="Elevator"]
+[node name="Door" type="Sprite2D" parent="ElevatorShaft"]
 position = Vector2(96, 0)
+z_index = 2
 texture = ExtResource("3_fa8ik")
 centered = false
 hframes = 4
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Elevator/Door"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="ElevatorShaft/Door"]
 libraries = {
 "": SubResource("AnimationLibrary_7p603")
 }
 
-[node name="Front" type="Sprite2D" parent="Elevator"]
+[node name="Front" type="Sprite2D" parent="ElevatorShaft"]
+z_index = 2
 texture = ExtResource("2_87q23")
 centered = false
 
@@ -99,6 +102,7 @@ offset_left = 124.0
 offset_top = 4.0
 offset_right = 164.0
 offset_bottom = 27.0
+theme_override_fonts/font = ExtResource("6_ylker")
 text = "1"
 
 [node name="Area2D" type="Area2D" parent="."]
@@ -106,3 +110,28 @@ position = Vector2(64, 48)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource("RectangleShape2D_xf2cv")
+
+[node name="Enter" type="Marker2D" parent="."]
+position = Vector2(114, 80)
+
+[node name="Elevator" type="Marker2D" parent="."]
+position = Vector2(104, 80)
+
+[node name="Places" type="Node2D" parent="."]
+
+[node name="p0" type="Marker2D" parent="Places"]
+position = Vector2(148, 80)
+
+[node name="p1" type="Marker2D" parent="Places"]
+position = Vector2(172, 80)
+
+[node name="p2" type="Marker2D" parent="Places"]
+position = Vector2(196, 80)
+
+[node name="People" type="Node2D" parent="."]
+
+[node name="EnterTimer" type="Timer" parent="."]
+wait_time = 0.25
+one_shot = true
+
+[connection signal="timeout" from="EnterTimer" to="." method="_on_enter_timer_timeout"]

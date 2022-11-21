@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://b8hrik13xkl47"]
+
+[ext_resource type="Script" path="res://src/person.gd" id="1_q4uet"]
+[ext_resource type="Texture2D" uid="uid://d3td6pg38b4qa" path="res://assets/person.png" id="2_lnwtc"]
+[ext_resource type="FontFile" uid="uid://cjqqa8bp5bu2o" path="res://assets/NameHereCondensed.ttf" id="3_sei4p"]
+
+[node name="Person" type="Node2D"]
+script = ExtResource("1_q4uet")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-16, -48)
+z_index = 2
+texture = ExtResource("2_lnwtc")
+centered = false
+
+[node name="Label" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+scale = Vector2(0.5, 0.5)
+theme_override_fonts/font = ExtResource("3_sei4p")
