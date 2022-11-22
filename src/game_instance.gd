@@ -10,6 +10,7 @@ extends Node2D
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	scale = Vector2i(Global.SCALE, Global.SCALE)
 	
 	$Floor.set_elevator($Elevator)
 	$Floor2.set_elevator($Elevator)

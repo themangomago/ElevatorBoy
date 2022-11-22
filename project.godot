@@ -8,12 +8,28 @@
 
 config_version=5
 
+_global_script_classes=[{
+"base": "Label",
+"class": &"ScaledLabel",
+"language": &"GDScript",
+"path": "res://src/scaled_label.gd"
+}]
+_global_script_class_icons={
+"ScaledLabel": ""
+}
+
 [application]
 
 config/name="ElevatorBoy"
 run/main_scene="res://src/game_manager.tscn"
 config/features=PackedStringArray("4.0", "Mobile")
+run/max_fps=60
 config/icon="res://icon.svg"
+
+[autoload]
+
+Types="*res://src/_autoloads/types.gd"
+Global="*res://src/_autoloads/global.gd"
 
 [display]
 

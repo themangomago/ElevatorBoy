@@ -3,14 +3,14 @@ extends Node2D
 
 const person_scene = preload("res://src/person.tscn")
 
-const DEFAULT_GRAVITY: float = 0.1
-const MAX_SPEED: float = 0.15
-const CRASH_SPEED: float = 0.10
+const DEFAULT_GRAVITY: float = 9
+const MAX_SPEED: float = 3
+const CRASH_SPEED: float = 4
 
 
 var max_point: int = 96
 var min_point: int = 0
-var power: float = 0.1
+var power: float = 2
 
 var people: Array = []
 var people_capacity: int = 2
@@ -24,10 +24,11 @@ func _get_current_force():
 	# TODO: Calc load
 	return power
 
-func add_person():
+func add_person(floor: int):
 	var person := person_scene.instantiate()
 	person.position = $EntryPos.position
 	$People.add_child(person)
+	person.setup_elevator(floor)
 	people.append(person)
 	move_to_queue(people.size() - 1)
 
@@ -72,9 +73,15 @@ func _process(delta):
 			print("crash")
 		velocity = 0
 	
-	$Label.set_text(str(position) + "\n" + str(velocity))
+	
+	var string = str(position) + "\n" + str(velocity)
+	
+	if current_floor:
+		string += "\n floor: " + str(current_floor.floor)
+	
+	$Label.set_text(string)
 
-	$Sprites/wheel.rotation += 16 * velocity * delta
+	$Sprites/wheel.rotation +=  velocity * delta
 
 
 func get_entry():

@@ -24,6 +24,7 @@ func add_person():
 	var person := person_scene.instantiate()
 	var spot = get_node("Places/p" + str(people_waiting.size()))
 	person.position = spot.position
+	person.setup_floor(floor)
 	$People.add_child(person)
 	people_waiting.append(person)
 
@@ -42,6 +43,8 @@ func _move_to_enter():
 	)
 	move_tween.tween_callback(Callable(self, "_enter_position_reached"))
 	move_tween.play()
+	
+	people_waiting[0].moving()
 	people_waiting[0].flip(false)
 
 func _move_to_queue():
@@ -56,8 +59,10 @@ func _move_to_queue():
 		$Places/p0.position,
 		duration
 	)
-	move_tween.tween_callback(Callable(self, "_original_position_exited"))
+	move_tween.tween_callback(Callable(self, "_original_position_reached"))
 	move_tween.play()
+	
+	people_waiting[0].moving()
 	people_waiting[0].flip(true)
 	person_at_enter_position = false
 
@@ -80,11 +85,20 @@ func close_door():
 
 func _enter_position_reached():
 	person_at_enter_position = true
+	people_waiting[0].waiting()
 	$EnterTimer.start()
 
-func _original_position_exited():
+func _original_position_reached():
 	people_waiting[0].flip(false)
+	people_waiting[0].waiting()
 
+
+func _elevator_reached():
+	person_at_enter_position = false
+	elevator.add_person(people_waiting[0].desired_floor)
+	people_waiting[0].queue_free()
+	people_waiting.pop_front()
+	
 
 func _on_enter_timer_timeout():
 	if elevator_on_floor:
@@ -96,15 +110,11 @@ func _on_enter_timer_timeout():
 			people_waiting[0].walk_speed / 4
 		)
 		tween.play()
+		people_waiting[0].moving()
 		tween.tween_callback(Callable(self, "_elevator_reached"))
 	else:
 		_move_to_queue()
 
-func _elevator_reached():
-	person_at_enter_position = false
-	
-	elevator.add_person()
-	people_waiting[0].queue_free()
-	people_waiting.pop_front()
+
 	
 	

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://src/person.gd" id="1_q4uet"]
 [ext_resource type="Texture2D" uid="uid://d3td6pg38b4qa" path="res://assets/person.png" id="2_lnwtc"]
-[ext_resource type="FontFile" uid="uid://cjqqa8bp5bu2o" path="res://assets/NameHereCondensed.ttf" id="3_sei4p"]
+[ext_resource type="FontFile" uid="uid://by7ts3uwu1loi" path="res://assets/Rockboxcond12.ttf" id="3_dvtxt"]
 
 [node name="Person" type="Node2D"]
 script = ExtResource("1_q4uet")
@@ -13,8 +13,22 @@ z_index = 2
 texture = ExtResource("2_lnwtc")
 centered = false
 
-[node name="Label" type="Label" parent="."]
-offset_right = 40.0
-offset_bottom = 23.0
+[node name="Target" type="Label" parent="."]
+offset_left = -8.0
+offset_top = -56.0
+offset_right = 24.0
+offset_bottom = -24.0
 scale = Vector2(0.5, 0.5)
-theme_override_fonts/font = ExtResource("3_sei4p")
+theme_override_fonts/font = ExtResource("3_dvtxt")
+theme_override_font_sizes/font_size = 16
+text = "5"
+horizontal_alignment = 1
+
+[node name="Debug" type="Label" parent="."]
+offset_left = -8.0
+offset_right = 88.0
+offset_bottom = 80.0
+scale = Vector2(0.5, 0.5)
+theme_override_fonts/font = ExtResource("3_dvtxt")
+theme_override_font_sizes/font_size = 16
+text = "5"

@@ -7,7 +7,6 @@
 
 [node name="GameInstance" type="Node2D"]
 texture_filter = 1
-scale = Vector2(2, 2)
 script = ExtResource("1_snmib")
 
 [node name="SkyBg" type="Sprite2D" parent="."]

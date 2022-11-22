@@ -14,3 +14,9 @@ script = ExtResource("1_k25u7")
 
 [node name="GameInstance" parent="." instance=ExtResource("2_ydp58")]
 scale = Vector2(3, 3)
+
+[node name="Menu" type="CanvasLayer" parent="."]
+
+[node name="Label" type="Label" parent="Menu"]
+offset_right = 40.0
+offset_bottom = 23.0
