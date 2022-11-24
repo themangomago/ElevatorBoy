@@ -1,11 +1,7 @@
 extends Node2D
 
 
-# Z index:
-# 0 - bg
-# 1 - door
-# 2 - persons
-# 3 - foreground
+
 
 
 # Called when the node enters the scene tree for the first time.
@@ -17,10 +13,10 @@ func _ready():
 	$Floor3.set_elevator($Elevator)
 	$Floor4.set_elevator($Elevator)
 	
-	$Floor3.add_person()
+	$Floor2.add_person(Types.PersonClass.Grandma)
 	
-	$Floor2.add_person()
-	$Floor2.add_person()
+	# $Floor2.add_person(Types.PersonClass.Student)
+	# $Floor2.add_person(Types.PersonClass.Employee)
 
 
 

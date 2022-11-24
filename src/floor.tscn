@@ -88,7 +88,7 @@ libraries = {
 }
 
 [node name="Front" type="Sprite2D" parent="ElevatorShaft"]
-z_index = 2
+z_index = 3
 texture = ExtResource("2_87q23")
 centered = false
 
@@ -114,6 +114,12 @@ shape = SubResource("RectangleShape2D_xf2cv")
 [node name="Enter" type="Marker2D" parent="."]
 position = Vector2(114, 80)
 
+[node name="Exit" type="Marker2D" parent="."]
+position = Vector2(132, 80)
+
+[node name="OutOfScreen" type="Marker2D" parent="."]
+position = Vector2(312, 80)
+
 [node name="Elevator" type="Marker2D" parent="."]
 position = Vector2(104, 80)
 
@@ -129,9 +135,3 @@ position = Vector2(172, 80)
 position = Vector2(196, 80)
 
 [node name="People" type="Node2D" parent="."]
-
-[node name="EnterTimer" type="Timer" parent="."]
-wait_time = 0.25
-one_shot = true
-
-[connection signal="timeout" from="EnterTimer" to="." method="_on_enter_timer_timeout"]

@@ -1,8 +1,62 @@
-[gd_scene load_steps=4 format=3 uid="uid://b8hrik13xkl47"]
+[gd_scene load_steps=8 format=3 uid="uid://b8hrik13xkl47"]
 
 [ext_resource type="Script" path="res://src/person.gd" id="1_q4uet"]
 [ext_resource type="Texture2D" uid="uid://d3td6pg38b4qa" path="res://assets/person.png" id="2_lnwtc"]
 [ext_resource type="FontFile" uid="uid://by7ts3uwu1loi" path="res://assets/Rockboxcond12.ttf" id="3_dvtxt"]
+
+[sub_resource type="Animation" id="Animation_a8uq5"]
+resource_name = "idle"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_gqjyb"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_blh2v"]
+resource_name = "walk"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [1, 2, 3, 4, 5]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_dbcyw"]
+_data = {
+"RESET": SubResource("Animation_gqjyb"),
+"idle": SubResource("Animation_a8uq5"),
+"walk": SubResource("Animation_blh2v")
+}
 
 [node name="Person" type="Node2D"]
 script = ExtResource("1_q4uet")
@@ -12,6 +66,7 @@ position = Vector2(-16, -48)
 z_index = 2
 texture = ExtResource("2_lnwtc")
 centered = false
+hframes = 7
 
 [node name="Target" type="Label" parent="."]
 offset_left = -8.0
@@ -32,3 +87,17 @@ scale = Vector2(0.5, 0.5)
 theme_override_fonts/font = ExtResource("3_dvtxt")
 theme_override_font_sizes/font_size = 16
 text = "5"
+
+[node name="Debug2" type="Label" parent="."]
+offset_top = -72.0
+offset_right = 96.0
+offset_bottom = 8.0
+scale = Vector2(0.5, 0.5)
+theme_override_fonts/font = ExtResource("3_dvtxt")
+theme_override_font_sizes/font_size = 16
+text = "5"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_dbcyw")
+}

@@ -3,13 +3,14 @@ extends Node2D
 
 @export var floor: int = -1
 
-const person_scene = preload("res://src/person.tscn")
+const person_scene := preload("res://src/person.tscn")
+const popup_scene := preload("res://src/popup.tscn")
 
 var elevator_on_floor: bool = false
 var person_at_enter_position: bool = false
 
 var people_waiting: Array = []
-var move_tween: Tween
+
 
 var elevator: Node = null
 
@@ -20,51 +21,79 @@ func _ready():
 func set_elevator(node: Node):
 	elevator = node
 
-func add_person():
+
+# Add a person to the floor
+func add_person(pclass: Types.PersonClass):
 	var person := person_scene.instantiate()
 	var spot = get_node("Places/p" + str(people_waiting.size()))
 	person.position = spot.position
-	person.setup_floor(floor)
+	person.set_class(pclass)
+	person.set_floor(floor)
 	$People.add_child(person)
 	people_waiting.append(person)
 
+# Adding a person who exited the elevator and leaving to the right now
+func add_leaver(pclass: Types.PersonClass, global_pos: Vector2):
+	print("add_leaver")
+	# Instantiate a person
+	var person := person_scene.instantiate()
+	person.set_class(pclass)
+	$People.add_child(person)
+	person.global_position = global_pos
 
-func _move_to_enter():
-	var duration: float = (people_waiting[0].position.x - $Places/p0.position.x)/($Places/p0.position.x - $Enter.position.x)
-	duration *= people_waiting[0].walk_speed
-	if move_tween:
-		move_tween.kill()
-	move_tween = get_tree().create_tween()
-	move_tween.tween_property(
-		people_waiting[0],
-		"position",
-		$Enter.position,
-		1
+	# Move to the exit point (faster)
+	person.moving(
+		$Exit.position,
+		Callable(self, "_leaver_position_reached").bind(person),
+		false
 	)
-	move_tween.tween_callback(Callable(self, "_enter_position_reached"))
-	move_tween.play()
-	
-	people_waiting[0].moving()
-	people_waiting[0].flip(false)
 
-func _move_to_queue():
-	var duration: float = ($Places/p0.position.x - people_waiting[0].position.x)/($Places/p0.position.x - $Enter.position.x)
-	duration *= people_waiting[0].walk_speed
-	if move_tween:
-		move_tween.kill()
-	move_tween = get_tree().create_tween()
-	move_tween.tween_property(
-		people_waiting[0],
-		"position",
-		$Places/p0.position,
-		duration
+
+func _leaver_position_reached(person: Node):
+	var data: Dictionary = person.get_score_and_money()
+	var popup := popup_scene.instantiate()
+	popup.position = $Exit.position - Vector2(0, 64)
+	popup.setup(data.money, data.score)
+	add_child(popup)
+
+	# Move to exit
+	person.moving(
+		$OutOfScreen.position,
+		Callable(person, "queue_free")
 	)
-	move_tween.tween_callback(Callable(self, "_original_position_reached"))
-	move_tween.play()
+
+
+# Move to position to enter elevator
+func move_to_enter():
+	people_waiting[0].moving($Enter.position, Callable(self, "_enter_position_reached"))
+
+# Elevator enter position reached
+func _enter_position_reached():
+	person_at_enter_position = true
+	people_waiting[0].waiting()
 	
-	people_waiting[0].moving()
-	people_waiting[0].flip(true)
+	if elevator_on_floor:
+		people_waiting[0].moving(
+			elevator.get_entry_global_position(),
+			Callable(self, "_elevator_reached"),
+			true
+		)
+	else:
+		move_to_queue(0)
+
+# Move back to queue
+func move_to_queue(spot: int):
+	people_waiting[spot].moving(
+		get_node("Places/p" + str(spot)).position,
+		Callable(self, "_queue_position_reached").bind(spot)
+	)
 	person_at_enter_position = false
+
+# QUeue position reached
+func _queue_position_reached(spot: int):
+	if people_waiting.size() > 0: # TODO: should we reach this
+		people_waiting[spot]
+		people_waiting[spot].waiting()
 
 
 func open_door():
@@ -73,48 +102,23 @@ func open_door():
 	
 	if people_waiting.size() > 0:
 		if elevator.has_space():
-			_move_to_enter()
+			move_to_enter()
 
 
 func close_door():
 	elevator_on_floor = false
 	$ElevatorShaft/Door/AnimationPlayer.play("close")
 
-	if person_at_enter_position or (move_tween != null and move_tween.is_running()):
-		_move_to_queue()
+	if person_at_enter_position:
+		move_to_queue(0)
 
-func _enter_position_reached():
-	person_at_enter_position = true
-	people_waiting[0].waiting()
-	$EnterTimer.start()
 
-func _original_position_reached():
-	people_waiting[0].flip(false)
-	people_waiting[0].waiting()
+
 
 
 func _elevator_reached():
 	person_at_enter_position = false
-	elevator.add_person(people_waiting[0].desired_floor)
+	elevator.add_person(people_waiting[0].desired_floor, people_waiting[0].person_class)
 	people_waiting[0].queue_free()
 	people_waiting.pop_front()
-	
 
-func _on_enter_timer_timeout():
-	if elevator_on_floor:
-		var tween := get_tree().create_tween()
-		tween.tween_property(
-			people_waiting[0],
-			"global_position",
-			elevator.get_entry(),
-			people_waiting[0].walk_speed / 4
-		)
-		tween.play()
-		people_waiting[0].moving()
-		tween.tween_callback(Callable(self, "_elevator_reached"))
-	else:
-		_move_to_queue()
-
-
-	
-	
